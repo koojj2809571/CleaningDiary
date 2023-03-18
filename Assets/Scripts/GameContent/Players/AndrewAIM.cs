@@ -1,3 +1,5 @@
+using System;
+using Base;
 using UnityEngine;
 
 namespace GameContent.Players
@@ -10,7 +12,7 @@ namespace GameContent.Players
         [SerializeField] private float farthestDis;
 
         private Andrew _player;
-        private Enemy.Enemy _nearestEnemy;
+        private BaseEnemy _nearestEnemy;
         private RaycastHit2D _rayHit;
         private float _distance;
         private LayerMask _layerMask;
@@ -29,8 +31,8 @@ namespace GameContent.Players
             var position = transform.position;
             for (int i = 0; i < GameManager.Instance.EnemyCount; i++)
             {
-                Enemy.Enemy enemy = GameManager.Instance.enemies[i];
-                if (enemy == null) continue;
+                BaseEnemy enemy = GameManager.Instance.enemies[i];
+                if (enemy == null) return;
 
                 var enemyPosition = enemy.transform.position;
                 /*
@@ -73,10 +75,9 @@ namespace GameContent.Players
 
             var enemyTrans = _nearestEnemy.transform;
             var position = enemyTrans.position;
-            // mark.transform.position = position;
-            mark.transform.SetParent(enemyTrans);
-            mark.transform.localPosition = Vector3.zero;
-            mark.transform.rotation = transform.rotation;
+            // mark.transform.SetParent(enemyTrans);
+            // mark.transform.localPosition = Vector3.zero;
+            // mark.transform.rotation = transform.rotation;
             mark.SetActive(true);
             Vector3 moveDir = position - transform.position;
             if (moveDir != Vector3.zero)
@@ -91,9 +92,18 @@ namespace GameContent.Players
 
         private void TestWall()
         {
+            if (_rayHit.collider == null) return;
             if (!_rayHit.collider.CompareTag("Wall")) return;
             nearestDis = 10;
             _nearestEnemy = null;
+        }
+
+        private void LateUpdate()
+        {
+            if (_nearestEnemy != null)
+            {
+                mark.transform.position = _nearestEnemy.transform.position;
+            }
         }
 
         private void MarkChangeLerp()

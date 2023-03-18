@@ -296,7 +296,7 @@ GameObject:
   - component: {fileID: 565230035776955774}
   m_Layer: 2
   m_Name: Turret1
-  m_TagString: Untagged
+  m_TagString: Turret
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -437,6 +437,7 @@ MonoBehaviour:
   - {fileID: 4738095038819321062}
   inaccuracy: 16
   shootClip: {fileID: 8300000, guid: c0b855d3ca831dc4b8af452b643f9ca6, type: 3}
+  isFromPlayer: 0
 --- !u!1 &4738095040491932147
 GameObject:
   m_ObjectHideFlags: 0

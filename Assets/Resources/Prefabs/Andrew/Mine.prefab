@@ -126,6 +126,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blink: {fileID: 4296151766158183363}
+  isFromPlayer: 0
   time: 0
 --- !u!1 &4296151766158183363
 GameObject:

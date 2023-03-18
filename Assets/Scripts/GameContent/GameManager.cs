@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using Base;
 using GameContent.Players;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Util;
 
 namespace GameContent
@@ -13,9 +15,11 @@ namespace GameContent
 
         public SaveLoadUtils recordRunData;
 
-        [HideInInspector] public List<Enemy.Enemy> enemies = new();
+        [HideInInspector] public List<BaseEnemy> enemies = new();
 
         public List<GameObject> levelDoor = new();
+
+        public bool anthonyIsDead;
 
         public int EnemyCount => enemies.Count;
 
@@ -31,6 +35,21 @@ namespace GameContent
         private void SaveByJson()
         {
         
+        }
+
+        public void SwitchScene(int index, float delay)
+        {
+            switch (index)
+            {
+                case 0:
+                    Invoke(nameof(LoadMain),delay);
+                    break;
+            }
+        }
+
+        private void LoadMain()
+        {
+            SceneManager.LoadScene(0);
         }
 
         // Start is called before the first frame update

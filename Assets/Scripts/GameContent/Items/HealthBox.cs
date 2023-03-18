@@ -9,12 +9,12 @@ namespace GameContent.Items
         
         protected override void OnTrigger()
         {
-            Player.curHp = 1f;
+            Player.ObserveHp.Value = 1f;
         }
 
         protected override bool CanTrigger()
         {
-            return Player.curHp < Player.maxHp;
+            return Player.ObserveHp.Value < Player.maxHp;
         }
     }
 }

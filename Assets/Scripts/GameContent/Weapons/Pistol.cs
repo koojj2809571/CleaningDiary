@@ -12,6 +12,6 @@ namespace GameContent.Weapons
         protected override AudioClip FireClip => Resources.Load<AudioClip>("Pistol1".AudioGunPath());
         protected override AudioClip ReloadClip => Resources.Load<AudioClip>("Reload".AudioGunPath());
         protected override float AttackRange => Random.Range(-AttackCtr.curInaccuracy, AttackCtr.curInaccuracy);
-        protected override GameObject Bullet => Resources.Load<GameObject>("Bullet0".PrefabBulletPath());
+        protected override GameObject CurBullet => Resources.Load<GameObject>("Bullet0".PrefabBulletPath());
     }
 }

@@ -31,7 +31,7 @@ namespace Util
             unLockedLevel = (int)LoadData(PkLevels, 1);
             volume = (float)LoadData(PkVolume, 1.0f);
             joystickSize = (float)LoadData(PkJoyStickSize, 0.3f);
-            gunLevel = 6;
+            gunLevel = 1;
         }
 
         public void InitWeapons()
@@ -55,8 +55,9 @@ namespace Util
             }
         }
 
-        public void SaveMoney(int newMoney)
+        public void SaveMoney(int? newMoney)
         {
+            newMoney ??= money;
             SaveData(PkMoney, newMoney);
         }
         

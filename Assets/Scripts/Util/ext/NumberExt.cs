@@ -14,7 +14,7 @@ namespace Util.ext
         
         public static float MaxLimit(this float i, float max) => i > max ? max : i;
         public static float MinLimit(this float i, float min) => i > min ? i : min;
-        public static float PlusLimit(ref this float i, float add, float max)
+        public static float PlusLimit(this float i, float add, float max)
         {
             i += add;
             return Mathf.Min(i, max);

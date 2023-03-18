@@ -3,9 +3,6 @@ using Base;
 using Constant;
 using GameContent.Weapons;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
-using Util.ext;
-using Random = UnityEngine.Random;
 
 namespace GameContent.Players
 {
@@ -165,7 +162,8 @@ namespace GameContent.Players
                 if (hasTurret)
                 {
                     hasTurret = false;
-                    Instantiate(turrets[_turretLv - 1], transform.position, Quaternion.identity);
+                    Turret goTurret = Instantiate(turrets[_turretLv - 1], transform.position, Quaternion.identity).GetComponent<Turret>();
+                    goTurret.SetFromPlayer(true);
                 }
             }
 
@@ -174,7 +172,8 @@ namespace GameContent.Players
                 if (curMine > 0)
                 {
                     curMine--;
-                    Instantiate(mineGo, transform.position, Quaternion.identity);
+                    MineBlinking goMine = Instantiate(mineGo, transform.position, Quaternion.identity).GetComponent<MineBlinking>();
+                    goMine.SetFromPlayer(true);
                 }
             }
         }

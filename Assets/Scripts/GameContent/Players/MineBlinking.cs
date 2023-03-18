@@ -6,9 +6,21 @@ namespace GameContent.Players
     {
 
         public GameObject blink;
+        public bool isFromPlayer;
         public float time;
         private float _timer;
-    
+        private SpriteRenderer _sp;
+
+        public void SetFromPlayer(bool from)
+        {
+            isFromPlayer = from;
+            if (!isFromPlayer)
+            {
+                _sp = transform.Find("circle").GetComponent<SpriteRenderer>();
+                _sp.color = new Color(0.1f, 0.1f, 0.1f);
+            }
+        }
+        
         // Start is called before the first frame update
         void Start()
         {

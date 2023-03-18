@@ -16,6 +16,7 @@ TagManager:
   - Key
   - Door
   - OneOffItem
+  - Turret
   layers:
   - Default
   - TransparentFX

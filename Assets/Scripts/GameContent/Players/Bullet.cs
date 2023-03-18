@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace GameContent.Players
 {
@@ -8,7 +9,13 @@ namespace GameContent.Players
         public float lifeTime;
         public float speed;
         public GameObject destroyParticle;
-        
+        public bool isFromPlayer;
+
+        public void SetFromPlayer(bool from)
+        {
+            isFromPlayer = from;
+        }
+
         private void Start()
         {
             Destroy(gameObject,lifeTime);
@@ -25,7 +32,7 @@ namespace GameContent.Players
             {
                 Destroy(gameObject);
                 GameObject go = Instantiate(destroyParticle, transform.position, Quaternion.identity);
-                // Destroy(go,0.1f);
+                Destroy(go,1f);
             }
         }
     }

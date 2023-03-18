@@ -149,3 +149,4 @@ MonoBehaviour:
   lifeTime: 0.7
   speed: 8
   destroyParticle: {fileID: 4393742159822644639, guid: 5bf50c4131cb14d3f83411c1b7e0bd18, type: 3}
+  isFromPlayerShoot: 0

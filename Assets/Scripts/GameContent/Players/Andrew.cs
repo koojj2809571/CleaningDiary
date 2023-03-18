@@ -1,5 +1,7 @@
 using GameContent.Items;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using Util;
 using Util.ext;
 
 namespace GameContent.Players
@@ -8,6 +10,7 @@ namespace GameContent.Players
     {
         [SerializeField] private GameObject bloodTrail;
         [SerializeField] private GameObject bloodParticle;
+        [SerializeField] private GameObject deadGos;
         [SerializeField] private AudioClip bonus;
 
         public bool isMoving;
@@ -17,22 +20,16 @@ namespace GameContent.Players
         [SerializeField] public int regenHpSpeed;
         [SerializeField] public int delayRegenHp;
         [SerializeField] public float curHp;
+        public ListenAbleValue<float> ObserveHp;
         public int killTarget;
         public int curKill;
 
-        private float _delayTimer;
+        public float delayTimer;
         private Rigidbody2D _playerRb;
         private AudioSource _audio;
+        public GameObject explosion;
 
         [HideInInspector] public PlayAttack attack;
-
-        private void Awake()
-        {
-        }
-
-        private void OnEnable()
-        {
-        }
 
         // Start is called before the first frame update
         void Start()
@@ -43,6 +40,8 @@ namespace GameContent.Players
             regenHpSpeed = delayRegenHp = 1;
             _audio = GetComponent<AudioSource>();
             _playerRb = GetComponent<Rigidbody2D>();
+            ObserveHp = new ListenAbleValue<float>(ref curHp);
+            AddObserver();
         }
 
         // Update is called once per frame
@@ -50,6 +49,23 @@ namespace GameContent.Players
         {
             PlayerMoveInput();
             RegenHp();
+        }
+        
+        private void AddObserver()
+        {
+            ObserveHp.SetObserve(HpObserver);
+        }
+
+        private void HpObserver(float hp)
+        {
+            curHp = hp;
+            if (hp <= 0)
+            {
+                GameManager.Instance.recordRunData.SaveMoney(null);
+                Instantiate(deadGos, transform.position, Quaternion.identity);
+                GameManager.Instance.SwitchScene(0, 2f);
+                Destroy(gameObject);
+            }
         }
 
         private void OnCollisionEnter2D(Collision2D col)
@@ -60,12 +76,25 @@ namespace GameContent.Players
         private void OnTriggerEnter2D(Collider2D col)
         {
             OnItemTrigger(col.gameObject, "OneOffItem");
-            
-            string colTagStr = col.tag;
-            switch (colTagStr)
+
+            if (col.CompareTag("Bullet"))
             {
-                case "Bullet":
-                    break;
+                if (col.gameObject.GetComponent<Bullet>().isFromPlayer) return;
+                var angle = Quaternion.Euler(0, 0, col.transform.rotation.z + 180);
+                var position = transform.position;
+                var des = Instantiate(bloodParticle, position, angle);
+                Destroy(des,1f);
+                Instantiate(bloodTrail, position, angle);
+                Destroy(col.gameObject);
+                ObserveHp.Value -= 10;
+            }
+
+            if (col.CompareTag("Mine"))
+            {
+                if (col.gameObject.GetComponent<MineBlinking>().isFromPlayer) return;
+                Instantiate(explosion, transform.position, Quaternion.identity);
+                ObserveHp.Value -= 30;
+                Destroy(col.gameObject);
             }
         }
 
@@ -114,16 +143,16 @@ namespace GameContent.Players
 
         private void RegenHp()
         {
-            if (_delayTimer < 0 && curHp < maxHp)
+            if (delayTimer < 0 && ObserveHp.Value < maxHp)
             {
-                curHp += regenHpSpeed * Time.deltaTime;
+                ObserveHp.Value += regenHpSpeed * Time.deltaTime;
             }
-            else if (_delayTimer > 0)
+            else if (delayTimer > 0)
             {
-                _delayTimer -= Time.deltaTime;
+                delayTimer -= Time.deltaTime;
             }
 
-            curHp = curHp.MaxLimit(maxHp);
+            ObserveHp.Value = ObserveHp.Value.MaxLimit(maxHp);
         }
     }
 }

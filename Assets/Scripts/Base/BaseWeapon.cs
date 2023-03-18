@@ -1,7 +1,6 @@
 using GameContent;
 using GameContent.Players;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Util.ext;
 
 namespace Base
@@ -13,7 +12,7 @@ namespace Base
         protected abstract AudioClip FireClip { get; }
         protected abstract AudioClip ReloadClip { get; }
         protected abstract float AttackRange { get; }
-        protected abstract GameObject Bullet { get; }
+        protected abstract GameObject CurBullet { get; }
         protected virtual bool HasFlash => true;
 
         private WeaponProperties Properties => GameManager.Instance.recordRunData.WeaponPropertiesDic[Name];
@@ -35,8 +34,7 @@ namespace Base
             AttackCtr.curMagazine--;
             AttackCtr.curTotalBullets--;
             AttackCtr.curAttackColdDown = (float)Properties.attackCD;
-            float curInaccuracy = AttackCtr.curInaccuracy;
-            AttackCtr.curInaccuracy = curInaccuracy.PlusLimit((float)Properties.recoilForce, (float)Properties.maxInaccuracy);
+            AttackCtr.curInaccuracy = AttackCtr.curInaccuracy.PlusLimit((float)Properties.recoilForce, (float)Properties.maxInaccuracy);
 
             if (AttackCtr.curMagazine <= 0 && AttackCtr.curReloadColdDown <= 0)
             {
@@ -52,7 +50,8 @@ namespace Base
         protected void CreateBullet(float offset)
         {
             var initAngle = Quaternion.Euler(0, 0, Attack.transform.eulerAngles.z + offset);
-            Instantiate(Bullet, Attack.transform.position, initAngle);
+            Bullet b = Instantiate(CurBullet, Attack.transform.position, initAngle).GetComponent<Bullet>();
+            b.SetFromPlayer(true);
         }
 
         public void Reload(AudioSource gunAudio)
